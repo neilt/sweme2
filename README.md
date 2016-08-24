@@ -36,4 +36,4 @@ Swift Usage
     `let evaluated = evaluator.eval(expression!)`  
     `let result = evaluated.toString()`  
     
-In your project you just need to add `Evaluator.swift` and `Expression.swift` to the project.
+To use in your own project, just add the files `Evaluator.swift` and `Expression.swift` to the project.

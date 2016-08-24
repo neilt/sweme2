@@ -1,15 +1,57 @@
+
+// What This Lisp Interpreter Can Do
+//
+// - to operate integer values by arithmetic operators
+//    (+ 0 (* 11 22) (- 333 30 3))
+//
+// - to operate list by `first', `rest' and `list'
+//    (first (1 2 3))
+//
+// - to bind values to local variables by `let'
+//    (let (a 2 b 3 c 4) (+ a b c))
+//
+// - to control flows by `if' and comparison operators
+//    (if (< 1 3) 2 3)
+//
+// - to create procedures by `\'
+// - to iterate values in list by `map'
+//    (map (list 1 2) (\ (x) (* 2 x)))
+//
+// - to define functions by `defun'
+//    (defun calc (a b) (+ a b))
+//    (calc 4 8)
+//
+// - to define variable
+//    (let a 5)
+
+
+// Usage
+//    let evaluator = Evaluator()
+//    let expression = evaluator.parse(" (map (list 1 2) (\ (x) (* 2 x)))")
+//    let evaluated = evaluator.eval(expression!)
+//    let result = evaluated.toString()
+
 class Environment {
     let outer: Environment?
+
     var vars: [String : Expression] = [:]
-    init(outer: Environment?) { self.outer = outer }
-    func add(symbol: Symbol, expression: Expression) { vars[symbol.name] = expression }
-    func lookup(symbol: Symbol)
-        -> Expression! { return (vars[symbol.name] != nil) ? vars[symbol.name] : outer?.lookup(symbol) }
+
+    init(outer: Environment?) {
+        self.outer = outer
+    }
+
+    func add(symbol: Symbol, expression: Expression) {
+        vars[symbol.name] = expression
+    }
+
+    func lookup(symbol: Symbol) -> Expression! {
+        return (vars[symbol.name] != nil) ? vars[symbol.name] : outer?.lookup(symbol)
+    }
 }
 
 class Evaluator {
     var rootEnv = Environment(outer: nil)
-    
+
     func tokenize(input: String) -> [String] {
         var tokens: [String] = []
         var nextIndex = input.startIndex
@@ -21,18 +63,16 @@ class Evaluator {
         return tokens
     }
 
-    func getNextChar(input: String, nextIndex: String.Index)
-        -> String { return input.substringWithRange(nextIndex..<advance(nextIndex, 1)) }
-
-    func a(input: String, index: String.Index, char: String) -> Bool {
-        return input.substringFromIndex(index).hasPrefix(char)
+    func getNextChar(input: String, nextIndex: String.Index) -> String {
+        return input.substringWithRange(nextIndex..<nextIndex.advancedBy(1))
     }
 
     func readNextToken(input :String, startIndex : String.Index) -> (token : String?, nextIndex : String.Index) {
         var nextIndex = startIndex
         while nextIndex != input.endIndex {
-            if a(input, index: nextIndex, char: " ") || a(input, index: nextIndex, char: "\n") {
-                nextIndex++
+            if input.substringFromIndex(nextIndex).hasPrefix(" ")
+                || input.substringFromIndex(nextIndex).hasPrefix("\n") {
+                nextIndex = nextIndex.successor()
             } else {
                 break
             }
@@ -43,14 +83,15 @@ class Evaluator {
         let nextChar = getNextChar(input, nextIndex: nextIndex)
         switch nextChar {
         case "(", ")", "+", "*", "-", "/", "%", "<", ">", "=", "\\":
-            return (nextChar, ++nextIndex)
+            nextIndex = nextIndex.successor()
+            return (nextChar, nextIndex)
         case "1", "2", "3", "4", "5", "6", "7", "8", "9", "0":
             return readNumber(input, startIndex: nextIndex)
         default:
             return readSymbol(input, startIndex: nextIndex)
         }
     }
-
+    
     func readNumber(input: String, startIndex: String.Index) -> (token: String?, nextIndex:String.Index) {
         var value = ""
         var nextIndex = startIndex
@@ -62,7 +103,7 @@ class Evaluator {
             default:
                 return (value, nextIndex)
             }
-            nextIndex++
+            nextIndex = nextIndex.successor()
         }
         return (value, nextIndex)
     }
@@ -78,7 +119,7 @@ class Evaluator {
             default :
                 token += nextChar
             }
-            nextIndex++
+            nextIndex = nextIndex.successor()
         }
         return (token, nextIndex)
     }
@@ -98,7 +139,7 @@ class Evaluator {
             let token = tokens[startIndex]
             switch token.substringToIndex(token.startIndex.successor()) {
             case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
-                return (Number(value: tokens[startIndex].toInt()!), startIndex)
+                return (Number(value: Int(tokens[startIndex])!), startIndex)
             default:
                 return (Symbol(name: tokens[startIndex]), startIndex)
             }
@@ -120,25 +161,27 @@ class Evaluator {
         return evalr(expression, env: rootEnv)
     }
 
-    func nv /* number value */ (v: Expression) -> Int {
+    /// Number value
+    func numberValue(v: Expression) -> Int {
         return (v as! Number).value
     }
 
-    func nvs /* number values */ (es: [Expression], env: Environment) -> [Int] {
-            return map(es[1..<count(es)]){ self.nv(self.evalr($0, env: env)) }
+    /// Number values
+    func numberValues(es: [Expression], env: Environment) -> [Int] {
+        return es[1..<es.count].map{ self.numberValue(self.evalr($0, env: env)) }
     }
 
-    func narithmetic(ns: [Int], op: (Int, Int) -> Int)
-        -> Number { return Number(value: reduce(ns[1..<count(ns)], ns[0], op))
+    func narithmetic(ns: [Int], op: (Int, Int) -> Int) -> Number {
+        return Number(value: ns[1..<ns.count].reduce(ns[0], combine: op))
     }
 
     func ncompare(ns: [Int], op: (Int, Int) -> Bool) -> Boolean {
-            return Boolean(value: op(ns[0], ns[1]))
+        return Boolean(value: op(ns[0], ns[1]))
     }
 
     func bindParam(params: List, args: [Expression], outer: Environment) -> Environment {
-        var env = Environment(outer: outer)
-        for (idx, param) in enumerate(params.es) {
+        let env = Environment(outer: outer)
+        for (idx, param) in params.es.enumerate() {
             env.add(param as! Symbol, expression: evalr(args[idx], env: env))
         }
         return env
@@ -146,31 +189,43 @@ class Evaluator {
 
     func evalr(expression: Expression, env: Environment) -> Expression {
         switch expression {
+
         case let x where x is Procedure:
             return evalr((x as! Procedure).body, env:env)
+
         case let x where x is Symbol:
             return (env.lookup(x as! Symbol) != nil) ? env.lookup(x as! Symbol)! : expression
+
         case let x where x is List:
             let l = x as! List
             switch (l.es[0] as! Symbol).name {
+
             case "+":
-                return narithmetic(nvs(l.es, env: env)){ $0 + $1 }
+                return narithmetic(numberValues(l.es, env: env)){ $0 + $1 }
+
             case "-":
-                return narithmetic(nvs(l.es, env: env)){ $0 - $1 }
+                return narithmetic(numberValues(l.es, env: env)){ $0 - $1 }
+
             case "*":
-                return narithmetic(nvs(l.es, env: env)){ $0 * $1 }
+                return narithmetic(numberValues(l.es, env: env)){ $0 * $1 }
+
             case "/":
-                return narithmetic(nvs(l.es, env: env)){ $0 / $1 }
+                return narithmetic(numberValues(l.es, env: env)){ $0 / $1 }
+
             case "%":
-                return narithmetic(nvs(l.es, env: env)){ $0 % $1 }
+                return narithmetic(numberValues(l.es, env: env)){ $0 % $1 }
+
             case "<":
-                return ncompare(nvs(l.es, env: env)){ $0 < $1 }
+                return ncompare(numberValues(l.es, env: env)){ $0 < $1 }
+
             case ">":
-                return ncompare(nvs(l.es, env: env)){ $0 > $1 }
+                return ncompare(numberValues(l.es, env: env)){ $0 > $1 }
+
             case "=":
-                return ncompare(nvs(l.es, env: env)){ $0 == $1 }
+                return ncompare(numberValues(l.es, env: env)){ $0 == $1 }
+
             case "let":
-                var localEnv = Environment(outer: env)
+                let localEnv = Environment(outer: env)
                 var isName = true
                 var name: Symbol? = nil
                 for name_or_value in (l.es[1] as! List).es {
@@ -182,37 +237,49 @@ class Evaluator {
                     isName =  !isName
                 }
                 return evalr(l.es[2], env: localEnv)
+
             case "map":
                 let proc = evalr(l.es[2], env: env) as! Procedure
                 let targets = evalr(l.es[1] as! List, env: env) as! List
-                return List(es: map(targets.es){
+                return List(es: targets.es.map{
                     self.evalr(proc, env: self.bindParam(proc.params, args: [$0], outer: env))
                     })
+
             case "defun":
                 env.add(l.es[1] as! Symbol, expression: Procedure(params: l.es[2] as! List, body: l.es[3] as! List, lexicalEnv: env))
                 return Nil()
+
             case "if":
                 return evalr(l.es[(evalr(l.es[1], env: env) as! Boolean).value ? 2 : 3], env: env)
+
             case "\\":
                 return Procedure(params: l.es[1] as! List, body: l.es[2] as! List, lexicalEnv: env)
+
             case "quote":
                 return List(es: (l.es[1] as! List).es)
+
             case "cons":
                 let car = evalr(l.es[1], env: env)
                 let cdr = (evalr(l.es[2], env: env) as! List).es
                 return List(es: [car] + cdr)
+
             case "list":
-                return List(es: map(l.es[1..<count(l.es)]){ $0 }) // map is used to cnvert Slice to Array
+                return List(es: l.es[1..<l.es.count].map{ $0 }) // map is used to cnvert Slice to Array
+
             case "first":
                 return (l.es[1] as! List).es[0]
+
             case "rest":
-                var src = l.es[1] as! List
-                return List(es: map(src.es[1..<count(src.es)]){ $0 }) // map is used to cnvert Slice to Array
+                let src = l.es[1] as! List
+                return List(es: src.es[1..<src.es.count].map{ $0 }) // map is used to cnvert Slice to Array
+
             case let function where (env.lookup(l.es[0] as! Symbol) != nil):
                 let proc = env.lookup(l.es[0] as! Symbol) as! Procedure
-                return evalr(proc, env: bindParam(proc.params, args: map(l.es[1..<count(l.es)]){ $0 }, outer: env))
+                return evalr(proc, env: bindParam(proc.params, args: l.es[1..<l.es.count].map{ $0 }, outer: env))
+
             default: return Nil()
             }
+
         default: return expression
         }
     }

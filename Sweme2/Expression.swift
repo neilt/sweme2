@@ -48,7 +48,7 @@ class List : Expression {
     }
 
     override func toString() -> String {
-        return "(" + join(" ", map(es) { $0.toString() }) + ")"
+        return "(" + es.map { $0.toString() }.joinWithSeparator(" ") + ")"
     }
 }
 

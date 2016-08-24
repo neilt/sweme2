@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14E46" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -16,29 +18,22 @@
                         <rect key="frame" x="0.0" y="0.0" width="768" height="1024"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" text="result comes here..." translatesAutoresizingMaskIntoConstraints="NO" id="63t-Ku-klQ">
-                                <rect key="frame" x="15" y="149" width="573" height="126"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="63t-Ku-klQ">
+                                <rect key="frame" x="20" y="275" width="728" height="126"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="126" id="gNy-g3-w1m"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="28"/>
                                 <textInputTraits key="textInputTraits" keyboardAppearance="light"/>
                             </textView>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95H-BM-rEZ">
-                                <rect key="frame" x="492" y="36" width="96" height="30"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="42"/>
-                                <state key="normal" title="eval">
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="button" destination="BYZ-38-t0r" eventType="touchUpInside" id="X61-7B-jrn"/>
-                                </connections>
-                            </button>
-                            <webView contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jnV-Ep-uDn">
-                                <rect key="frame" x="33" y="391" width="521" height="201"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            </webView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" indicatorStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="yLc-fy-jBt">
-                                <rect key="frame" x="15" y="288" width="573" height="95"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" indicatorStyle="black" translatesAutoresizingMaskIntoConstraints="NO" id="yLc-fy-jBt">
+                                <rect key="frame" x="98" y="439" width="573" height="455"/>
                                 <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="573" id="EES-7z-Y5e"/>
+                                    <constraint firstAttribute="height" constant="455" id="OD3-Rk-m9I"/>
+                                </constraints>
                                 <string key="text">* What This Lisp Interpreter Can Do
 
 - to operate integer values by arithmetic operators
@@ -63,8 +58,8 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                             </textView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zsG-Jo-uAu">
-                                <rect key="frame" x="16" y="13" width="416" height="128"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" usesAttributedText="YES" translatesAutoresizingMaskIntoConstraints="NO" id="zsG-Jo-uAu">
+                                <rect key="frame" x="20" y="28" width="728" height="170"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 <attributedString key="attributedText">
                                     <fragment content="code here">
@@ -76,19 +71,51 @@
                                 </attributedString>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences" autocorrectionType="no" spellCheckingType="no" keyboardAppearance="light"/>
                             </textView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Results" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vq3-k3-lNO">
+                                <rect key="frame" x="356" y="409" width="56" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="95H-BM-rEZ">
+                                <rect key="frame" x="339" y="206" width="90" height="59"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="42"/>
+                                <inset key="contentEdgeInsets" minX="4" minY="4" maxX="4" maxY="4"/>
+                                <state key="normal" title="eval">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="button" destination="BYZ-38-t0r" eventType="touchUpInside" id="X61-7B-jrn"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="zsG-Jo-uAu" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="1xz-Pf-wam"/>
+                            <constraint firstItem="yLc-fy-jBt" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" constant="78" id="D0Z-Zm-kUU"/>
+                            <constraint firstItem="63t-Ku-klQ" firstAttribute="top" secondItem="95H-BM-rEZ" secondAttribute="bottom" constant="10" id="HNO-KA-X4B"/>
+                            <constraint firstItem="yLc-fy-jBt" firstAttribute="top" secondItem="vq3-k3-lNO" secondAttribute="bottom" constant="9" id="IdR-zr-N1m"/>
+                            <constraint firstItem="63t-Ku-klQ" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leadingMargin" id="QcN-4M-Ghp"/>
+                            <constraint firstItem="zsG-Jo-uAu" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="TGE-gL-vO0"/>
+                            <constraint firstItem="vq3-k3-lNO" firstAttribute="top" secondItem="63t-Ku-klQ" secondAttribute="bottom" constant="8" id="V37-6v-tYb"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="yLc-fy-jBt" secondAttribute="bottom" constant="130" id="glo-Ka-vRz"/>
+                            <constraint firstItem="95H-BM-rEZ" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="h0p-1x-SaS"/>
+                            <constraint firstItem="zsG-Jo-uAu" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="8" id="i6k-je-Zg7"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="yLc-fy-jBt" secondAttribute="trailing" constant="77" id="ibN-iP-DNg"/>
+                            <constraint firstItem="vq3-k3-lNO" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="j13-Ec-IgQ"/>
+                            <constraint firstItem="95H-BM-rEZ" firstAttribute="top" secondItem="zsG-Jo-uAu" secondAttribute="bottom" constant="8" id="jcU-pZ-b5b"/>
+                            <constraint firstItem="63t-Ku-klQ" firstAttribute="trailing" secondItem="8bC-Xf-vdC" secondAttribute="trailingMargin" id="u1c-lE-ajb"/>
+                        </constraints>
                     </view>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="iPad"/>
                     <connections>
                         <outlet property="codeTextView" destination="zsG-Jo-uAu" id="yNi-v2-qbx"/>
                         <outlet property="textView" destination="63t-Ku-klQ" id="sIP-rH-ihe"/>
-                        <outlet property="webView" destination="jnV-Ep-uDn" id="gh8-aZ-pha"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="572" y="193"/>
+            <point key="canvasLocation" x="409" y="157"/>
         </scene>
     </scenes>
 </document>

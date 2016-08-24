@@ -3,6 +3,9 @@
 //  Sweme2
 //
 //  Copyright (c) 2014 knj4484@gmail.com All rights reserved.
+//  Original Use by Permision
+//  Changes (c) 2016 Neil Tiffin
+//  Changes (c) 2016 Performance Champions, Inc.
 //
 
 import UIKit
@@ -11,7 +14,6 @@ class ViewController: UIViewController {
     let evaluator = Evaluator()
     
     @IBOutlet weak var textView: UITextView!
-    @IBOutlet weak var webView: UIWebView!
     @IBOutlet weak var codeTextView: UITextView!
     @IBAction func button() {
         let expression = evaluator.parse(codeTextView.text)
@@ -22,12 +24,6 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
-        
-        //let url: NSURL = NSURL(string: "http://www.yahoo.com")!
-        let path = NSBundle.mainBundle().pathForResource("a", ofType: "html")
-        let requestURL = NSURL(string: path!)
-        let request = NSURLRequest(URL: requestURL!)
-        webView.loadRequest(request)
     }
 
     override func didReceiveMemoryWarning() {

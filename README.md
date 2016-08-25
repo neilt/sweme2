@@ -2,9 +2,11 @@
 
 This lisp interpreter is derived from [In English](http://knj4484.blogspot.jp/2014/08/lisp-interpreter-implemented-in-185.html "In English") or [In Japanese](http://xavier.hateblo.jp/entry/2014/08/19/003609 "in Japanese")
 
-The goal is to improve readability, handle rational numbers, error reporting, and multiple top level expressions.
+The goal of this project is to create and maintain a simple, easy to understand and easy to customize embeddable lisp interpreter.
 
-Currently it is working with Xcode Version 7.3.1 (7D1014).
+We expect to add tests, improve code readability, handle rational numbers, handle strings, add error reporting, and handle multiple top level expressions.
+
+Currently this project works and has been tested with Xcode Version 7.3.1 (7D1014).
 
 What This Lisp Interpreter can do today:
 
@@ -30,10 +32,18 @@ What This Lisp Interpreter can do today:
 - to define variable  
     `(let a 5)`
 
-Swift Usage  
-    `let evaluator = Evaluator()`  
-    `let expression = evaluator.parse("(map (list 1 2) (\ (x) (* 2 x)))")`  
-    `let evaluated = evaluator.eval(expression!)`  
-    `let result = evaluated.toString()`  
-    
+# Code Usage  
+
+		let evaluator = Evaluator()
+		let expression = evaluator.parse("(map (list 1 2) (\ (x) (* 2 x)))")
+		let evaluated = evaluator.eval(expression!)
+		let result = evaluated.toString()
+
+# Limitations
+- simple and minimal functionality
+- no error handling
+- no performance consideration
+
+# Project Usage
+
 To use in your own project, just add the files `Evaluator.swift` and `Expression.swift` to the project.
